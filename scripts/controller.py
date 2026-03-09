@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import random 
 import rospy
-from Task1.srv import Service2, Service2Response
+from Task1.srv import Service2, Service2Response ,Service3, Service3Response
 from std_msgs.msg import Int32MultiArray
 
 
@@ -21,6 +21,15 @@ def car3(msg):
     s=msg.data[2]
 
 
+def interrrupt(req):
+
+    if (sub1.x==req.xn and sub1.y==req.yn) or (sub2.x==req.xn and sub2.y==req.yn) or (sub3.x==req.xn and sub3.y==req.yn) :
+        aprv=0
+    else:
+        aprv=1
+        flag=1 #reset all rnds
+    response=Service2Response(aprv,flag)
+    return response
 
 
 def move(req):
@@ -32,6 +41,8 @@ def move(req):
               rej1=1
               if sub1.s==1 or rej1==1: #if the obstecale is statinoary or blocked
                rnds1=1 # move it with random move(this obstacle is gonna be only who are doing requests)
+               rnds2=-1
+               rnds3=-1
                rej1=0
               
 
@@ -41,6 +52,8 @@ def move(req):
               rej2=1
               if sub2.s==1 or rej2==1:
                rnds2=1
+               rnds1=-1
+               rnds3=-1
                rej2=0
               
 
@@ -51,6 +64,8 @@ def move(req):
               rej3=1
               if sub3.s==1 or rej3==1:
                rnds3=1
+               rnds2=-1
+               rnds1=-1
                rej3=0
               
 
@@ -76,6 +91,8 @@ if __name__=='__main__':
     sub3=rospy.Subscriber('/car3',Int32MultiArray,car3)
 
     rospy.Service('control',Service2,move)
+
+    rospy.Service('int',Service3,interrrupt)
 
     
 
