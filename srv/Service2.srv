@@ -1,5 +1,6 @@
 int64 xn
 int64 yn
+int64 CID
 ---
 int64 APV
 int64 R1
